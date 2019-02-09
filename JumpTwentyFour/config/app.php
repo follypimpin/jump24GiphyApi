@@ -165,8 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-        Romeroqe\Giphy\GiphyServiceProvider::class,
-        Romeroqe\Giphy\StickersServiceProvider::class,
+       
 
         /*
          * Application Service Providers...
@@ -225,8 +224,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Giphy' => Romeroqe\Giphy\GiphyFacade::class,
-        'Stickers' => Romeroqe\Giphy\StickersFacade::class,
+        
 
     ],
 
