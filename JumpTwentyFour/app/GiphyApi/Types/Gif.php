@@ -81,7 +81,7 @@
          *
          * @return \Exception|ApiGiphyClient|string
          */
-        public function trending($limit = 20)
+        public function trending($limit = 25)
         {
             $endpoint = self::$type . '/trending';
             
