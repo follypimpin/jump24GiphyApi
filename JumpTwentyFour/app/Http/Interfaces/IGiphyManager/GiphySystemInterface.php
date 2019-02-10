@@ -11,25 +11,31 @@
     
     interface GiphySystemInterface
     {
-    
-    
+        
+        
         /** Gets most popular GIFs via the API
-         * @return array
-         */
-        function trending():array;
-    
-    
-        /** Performs Giphy Api Search Endpoint
-         * @param     $query
-         * @param int $limit
-         * @param int $offset
          *
-         * @return array
+         * @param  int limit
+         *
+         * @return mixed
          */
-        function search($query,$limit = 25, $offset = 0):array;
-    
+        public function trending($limit);
+        
+        
+        /** Performs Giphy Api Search Endpoint
+         *
+         * @param string $query
+         * @param int    $limit
+         * @param int    $offset
+         *
+         * @return mixed
+         */
+        public function search($query, $limit, $offset = 0);
+        
         /** Giphy Random Endpoint
-         * @return array
+         *
+         * @param string tag
+         * @return mixed
          */
-        function random():array;
+        public function random($tag);
     }

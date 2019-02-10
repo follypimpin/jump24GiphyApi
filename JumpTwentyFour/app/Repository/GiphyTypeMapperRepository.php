@@ -3,24 +3,25 @@
      * Created by PhpStorm.
      * User: rolanrewaju
      * Date: 10/02/2019
-     * Time: 12:22
+     * Time: 16:55
      */
     
-    namespace App\Providers;
+    namespace App\Repository;
     
     use App\GiphyApi\Types\Gif;
     use App\GiphyApi\Types\Sticker;
     use App\Http\Interfaces\IGiphyManager\GiphySystemInterface;
     
-    
-    class GiphyMapperRepository
+    class GiphyTypeMapperRepository
     {
+        
+        
         /**
          * @var Gif|Sticker $giphyMapType
          */
         protected static $giphyMapType;
-    
-    
+        
+        
         /**
          * @param  int $type
          *
@@ -29,15 +30,17 @@
          */
         public static function makeFor(int $type): GiphySystemInterface
         {
-        
-            switch($type){
+            
+            switch ($type) {
                 case 1:
                     return new Gif();
-            
+                
                 case 2:
                     return new Sticker();
-            
+                
             }
-        
+            
+            
         }
+        
     }

@@ -130,7 +130,7 @@ return [
 	|
 	*/
     'giphy_api_key' => env('GIPHY_API_KEY'),
-    'giphy_base_url' => env('GIPHY_BASE_URL') ? env('GIPHY_BASE_URL') : 'http://api.giphy.com/v1/',
+    'giphy_base_url' => env('GIPHY_BASE_URL') ? env('GIPHY_BASE_URL') : 'http://api.giphy.com/v1',
 
     /*
     |--------------------------------------------------------------------------

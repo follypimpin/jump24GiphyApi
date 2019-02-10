@@ -18,3 +18,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'giphy_api'], function(){
+    Route::get('/trending/{id}', 'Api\ApiGiphyController@getTrending');
+});
+
+
