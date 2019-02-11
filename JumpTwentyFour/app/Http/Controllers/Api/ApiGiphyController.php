@@ -14,8 +14,14 @@ use Illuminate\Support\Facades\Validator;
 
 class ApiGiphyController extends Controller
 {
-    //
     
+    
+    /** Returns Giphy Trending End point(Gifs || Stickers)
+     * @param GiphyTypeRequest $request
+     *
+     * @return JsonResponse
+     * @throws \Exception
+     */
     public function getTrending(GiphyTypeRequest $request): JsonResponse
     {
     
@@ -28,12 +34,12 @@ class ApiGiphyController extends Controller
           $id = (int)$id;
           $giphyRepository = GiphyTypeMapperRepository::makeFor($id);
           try{
-              
               $response = $giphyRepository->trending(25);
           } catch (\Exception $e){
               return $e->getMessage();
           }
-          return response()->json($response,200);
+        
+          return response()->shortSpanCacheResponse($response,200);
           
     }
 }
