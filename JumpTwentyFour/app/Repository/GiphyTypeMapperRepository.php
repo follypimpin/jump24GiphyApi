@@ -20,26 +20,26 @@
          * @var Gif|Sticker $giphyMapType
          */
         protected static $giphyMapType;
+    
+    
         
-        
-        /**
-         * @param  int $type
-         *
-         * @return GiphySystemInterface
-         * @throws \Exception
-         */
-        public static function makeFor(int $type): GiphySystemInterface
+        public static function makeFor(int $type)
         {
-            
-            switch ($type) {
-                case 1:
-                    return new Gif();
-                
-                case 2:
-                    return new Sticker();
-                
-                
+            try{
+                switch ($type) {
+                    case 1:
+                        return new Gif();
+        
+                    case 2:
+                        return new Sticker();
+        
+                    default:
+                        throw new \Exception('Unknown Giphy Type Provided');
+                }
+            } catch (\Exception $e) {
+                 return $e;
             }
+            
             
             
         }

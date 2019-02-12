@@ -24,10 +24,10 @@
          */
         public function boot()
         {
-            Response::macro('shortSpanCacheResponse', function ($data, $status) {
+            Response::macro('shortSpanCacheResponse', function ($data, $status, $maxAge) {
                 return Response::json($data, $status)
                                 ->withHeaders([
-                                    'Cache-Control' => 'max-age:3600'
+                                    'Cache-Control' => 'max-age:'.$maxAge
                                 ]);
             });
         }

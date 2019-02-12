@@ -27,7 +27,7 @@
         }
     
     
-        /**
+        /** Calls Giphy Api Requests
          * @param string $base_url
          * @param string $endpoint
          * @param array $params
@@ -45,10 +45,13 @@
                 $giphyClient = new Client();
                 try{
                     $response = $giphyClient->request('GET',$url);
+                    if($response->getStatusCode() !== 200){
+                        throw new \Exception('Request failed');
+                    }
                     return $response->getBody()->getContents();
                 }
                 catch (GuzzleException $guzzleException){
-                    return $guzzleException->getMessage();
+                    return $guzzleException ;
                 }
                 
             }

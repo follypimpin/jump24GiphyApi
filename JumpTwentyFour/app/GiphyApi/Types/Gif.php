@@ -96,14 +96,15 @@
             return ApiGiphyClient::Instance()->sendRequest(self::getBaseUrl(), $endpoint, $params);
             
         }
-        
+    
+    
         /** Performs Giphy Api Search Endpoint
+         * @param string $query
+         * @param int    $limit
+         * @param int    $offset
          *
-         * @param     $query
-         * @param int $limit
-         * @param int $offset
-         *
-         * @return \Exception|ApiGiphyClient|string
+         * @return \Exception|mixed|string
+         * @throws \GuzzleHttp\Exception\GuzzleException
          */
         public function search($query, $limit = 20, $offset = 0)
         {
@@ -118,7 +119,7 @@
                 $params['api_key'] = self::getApiKey();
             }
             
-            return ApiGiphyClient::Instance()->sendRequest(self::$base_url, $endpoint, $params);
+            return ApiGiphyClient::Instance()->sendRequest(self::getBaseUrl(), $endpoint, $params);
         }
         
         /** Giphy Random Endpoint
