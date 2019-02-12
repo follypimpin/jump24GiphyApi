@@ -22,7 +22,11 @@
         protected static $giphyMapType;
     
     
-        
+        /** Returns Gif|Sticker object
+         * @param int $type
+         *
+         * @return Gif|Sticker|\Exception
+         */
         public static function makeFor(int $type)
         {
             try{
