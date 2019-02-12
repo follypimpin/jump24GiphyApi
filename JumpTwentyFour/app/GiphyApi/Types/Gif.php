@@ -105,7 +105,7 @@
          *
          * @return \Exception|ApiGiphyClient|string
          */
-        public function search($query, $limit = 20, $offset = 0): ApiGiphyClient
+        public function search($query, $limit = 20, $offset = 0)
         {
             $endpoint = self::$type . '/search';
             $params = array(

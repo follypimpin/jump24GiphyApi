@@ -38,6 +38,7 @@
                 case 2:
                     return new Sticker();
                 
+                
             }
             
             
