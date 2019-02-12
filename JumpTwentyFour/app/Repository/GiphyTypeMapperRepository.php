@@ -27,7 +27,7 @@
          *
          * @return Gif|Sticker|\Exception
          */
-        public static function makeFor(int $type)
+        public static function makeFor($type)
         {
             try{
                 switch ($type) {

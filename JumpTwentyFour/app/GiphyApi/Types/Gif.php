@@ -26,7 +26,10 @@
          * @var string $type
          */
         private static $type = '/gifs';
-        
+    
+        /** Returns Instance of Self
+         * @return Gif
+         */
         public static function Instance(): self
         {
             static $inst = null;
@@ -98,13 +101,12 @@
         }
     
     
-        /** Performs Giphy Api Search Endpoint
+        /** Performs Gif Api Search Endpoint
          * @param string $query
          * @param int    $limit
          * @param int    $offset
          *
          * @return \Exception|mixed|string
-         * @throws \GuzzleHttp\Exception\GuzzleException
          */
         public function search($query, $limit = 20, $offset = 0)
         {

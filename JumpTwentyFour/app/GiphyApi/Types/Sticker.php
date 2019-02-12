@@ -7,39 +7,123 @@
      */
     
     namespace App\GiphyApi\Types;
+    
     use App\Http\Interfaces\IGiphyManager\GiphySystemInterface;
+    use App\Http\Requests\ApiGiphyClient;
     
     
     class Sticker implements GiphySystemInterface
     {
-    
-        /** Gets most popular GIFs via the API
-         *
-         * @return array
+        /**
+         * @var string $base_url
          */
-        function trending(): array
+        private static $base_url;
+        /**
+         * @var string $api_key
+         */
+        private static $api_key;
+        /**
+         * @var string $type
+         */
+        private static $type = '/stickers';
+        
+        /**
+         * @return Sticker
+         */
+        public static function Instance(): self
         {
-            // TODO: Implement trending() method.
+            static $inst = null;
+            if ($inst === null) {
+                $inst = new self();
+            }
+            
+            return $inst;
         }
-    
-        /** Performs Giphy Api Search Endpoint
+        
+        
+        /** Gets Giphy Base Url
          *
-         * @param     $query
+         * @return string
+         */
+        public static function getApiKey(): string
+        {
+            if (null === self::$api_key) {
+                $env = config('app.giphy_api_key');
+                self::$api_key = $env;
+            }
+            
+            return self::$api_key;
+        }
+        
+        /** Gets Api Key
+         *
+         * @return string
+         */
+        public static function getBaseUrl(): string
+        {
+            if (null === self::$base_url) {
+                self::$base_url = config('app.giphy_base_url');
+            }
+            
+            return self::$base_url;
+        }
+        
+        
+        /** Gets Stickers end point type
+         *
+         * @return string
+         */
+        public static function getType(): string
+        {
+            return self::$type;
+        }
+        
+        /** Gets Stickers Trending Endpoint
+         *
          * @param int $limit
-         * @param int $offset
          *
-         * @return array
+         * @return \Exception|ApiGiphyClient|string
          */
-        function search($query, $limit = 25, $offset = 0): array
+        public function trending($limit = 25)
         {
-            // TODO: Implement search() method.
+            $endpoint = self::$type . '/trending';
+            
+            $params = [
+                'limit' => (int)$limit
+            ];
+            if (!isset($params['api_key'])) {
+                $params['api_key'] = self::getApiKey();
+            }
+            
+            return ApiGiphyClient::Instance()->sendRequest(self::getBaseUrl(), $endpoint, $params);
         }
-    
-        /** Giphy Random Endpoint
+        
+        /** Performs Stickers Api Search Endpoint
          *
-         * @return array
+         * @param string $query
+         * @param int    $limit
+         * @param int    $offset
+         *
+         * @return \Exception|mixed|string
          */
-        function random(): array
+        public function search($query, $limit = 25, $offset = 0)
+        {
+            $endpoint = self::$type . '/search';
+            $params = array(
+                'q'      => urlencode($query),
+                'limit'  => (int)$limit,
+                'offset' => (int)$offset
+            );
+            if (!isset($params['api_key'])) {
+                $params['api_key'] = self::getApiKey();
+            }
+            
+            return ApiGiphyClient::Instance()->sendRequest(self::getBaseUrl(), $endpoint, $params);
+        }
+        
+        
+        public function random($tag)
         {
             // TODO: Implement random() method.
-}}
+        }
+    }
