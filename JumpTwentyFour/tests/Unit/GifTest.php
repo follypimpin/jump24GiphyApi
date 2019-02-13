@@ -43,28 +43,36 @@
         {
             $this->assertNotNull(Gif::getBaseUrl());
         }
-        
-        
+    
+        /**
+         * Validates is string Base Url
+         */
         public function testisStringBaseUrl(): void
         {
             $this->assertTrue(\is_string(Gif::getBaseUrl()));
             
         }
-        
-        
+    
+        /**
+         * Validates Not Null Gif Type
+         */
         public function testNullGetType(): void
         {
             $this->assertNotNull(Gif::getType());
         }
-        
-        
+    
+        /**
+         * Validates is string Gif Type
+         */
         public function testisStringGetType(): void
         {
             $this->assertTrue(\is_string(Gif::getType()));
             
         }
-        
-        
+    
+        /**
+         * Validates Gif Type begins with back slash
+         */
         public function testGetTypeBeginsWithBackSlash()
         {
             $prefix = '/';

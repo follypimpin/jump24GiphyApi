@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class GiphyTypeMapperRepositoryTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Tests if return type is Gif
      *
      * @return void
      */
@@ -22,7 +22,9 @@ class GiphyTypeMapperRepositoryTest extends TestCase
         $this->assertInstanceOf(Gif::class, $gifObj);
     }
     
-    
+    /**
+     * Tests if return type is Sticker
+     */
     public function testReturnObjectTypeSticker()
     {
         $gifObj = GiphyTypeMapperRepository::makeFor(2);
@@ -30,12 +32,15 @@ class GiphyTypeMapperRepositoryTest extends TestCase
     }
     
     
-    
+    /**
+     * Tests if return type is an exception
+     */
     public function testReturnObjectUnknownException()
     {
         $gifObj = GiphyTypeMapperRepository::makeFor(2000);
         $this->assertInstanceOf(\Exception::class, $gifObj);
     }
+    
     
     
     

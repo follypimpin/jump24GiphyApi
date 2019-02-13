@@ -30,9 +30,11 @@
             if ($validated->fails()) {
                 response()->json(['UnprocessableEntity:' => $request->messages()], 422);
             }
-            $id = (int)$request->id;
+            $data = $validated->getData();
+            $id = $data['id'];
+            //$id = (int)$request->id;
             try {
-                $giphyRepository = GiphyTypeMapperRepository::makeFor($id);
+                $giphyRepository = GiphyTypeMapperRepository::makeFor((int)$id);
                 if($giphyRepository instanceof \Exception){
                     return response()->json(['NotFound:' => $giphyRepository->getMessage()], 404);
                 }
@@ -53,8 +55,13 @@
             
             
         }
-        
-        
+    
+    
+        /** Returns Giphy Searching End point(Gifs || Stickers)
+         * @param GiphyPostSearchRequest $request
+         *
+         * @return JsonResponse
+         */
         public function postSearch(GiphyPostSearchRequest $request)
         {
             $validated = Validator::make($request->all(), $request->rules(),
@@ -84,6 +91,6 @@
                 return response()->json(['NotFound:' => $e->getMessage(), 404]);
             }
             
-            return response()->json($response, 200);
+           
         }
     }

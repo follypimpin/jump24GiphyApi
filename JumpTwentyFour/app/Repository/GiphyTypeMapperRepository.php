@@ -11,7 +11,8 @@
     use App\GiphyApi\Types\Gif;
     use App\GiphyApi\Types\Sticker;
     use App\Http\Interfaces\IGiphyManager\GiphySystemInterface;
-    
+    use http\Exception\InvalidArgumentException;
+
     class GiphyTypeMapperRepository
     {
         
@@ -27,18 +28,22 @@
          *
          * @return Gif|Sticker|\Exception
          */
-        public static function makeFor($type)
+        public static function makeFor(int $type)
         {
+            
             try{
+                
                 switch ($type) {
                     case 1:
                         return new Gif();
+                        break;
         
                     case 2:
                         return new Sticker();
-        
+                        break;
                     default:
                         throw new \Exception('Unknown Giphy Type Provided');
+                        break;
                 }
             } catch (\Exception $e) {
                  return $e;
