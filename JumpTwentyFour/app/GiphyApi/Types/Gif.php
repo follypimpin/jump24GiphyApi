@@ -111,7 +111,7 @@
         public function search($query, $limit, $offset = 0)
         {
             $endpoint = self::$type . '/search';
-            $limit = ($limit!== null && $limit !== 0)? $limit :25;
+            $limit = ($limit!== null && $limit !== 0) ? $limit :25;
             $params = array(
                 'q'      => urlencode($query),
                 'limit'  => (int)$limit,
