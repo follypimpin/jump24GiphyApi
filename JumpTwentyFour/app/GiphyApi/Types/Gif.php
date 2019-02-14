@@ -104,7 +104,7 @@
         /** Performs Gif Api Search Endpoint
          * @param string $query
          * @param int    $limit
-         * @param int    $offset
+         * @param int   $offset
          * @throws \Exception
          * @return \Exception|mixed|string
          */
