@@ -84,10 +84,10 @@
          * @throws \Exception
          * @return \Exception|ApiGiphyClient|string
          */
-        public function trending($limit = 25)
+        public function trending($limit)
         {
             $endpoint = self::$type . '/trending';
-            
+            $limit = ($limit!== null && $limit !== 0) ? $limit :25;
             $params = [
                 'limit' => (int)$limit
             ];
@@ -111,7 +111,7 @@
         public function search($query, $limit, $offset = 0)
         {
             $endpoint = self::$type . '/search';
-            $limit = ($limit!== null && $limit !== 0) ? $limit :25;
+            $limit = $limit ?? 25;
             $params = array(
                 'q'      => urlencode($query),
                 'limit'  => (int)$limit,
