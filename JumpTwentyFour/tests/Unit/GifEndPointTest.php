@@ -11,7 +11,7 @@
     
     class GifEndPointTest extends TestCase
     {
-    
+        
         /**
          * Test /giphy_api/trending/ endpoint for cache control
          *
@@ -22,7 +22,7 @@
             $id = 1;
             $response = $this->json('GET', '/giphy_api/trending/' . $id);
             $response->assertHeader('cache-control');
-        
+            
         }
         
         
@@ -213,8 +213,8 @@
             $response->assertJson($validationError);
             
         }
-    
-    
+        
+        
         /** Test /giphy_api/search/ endpoint with int query
          *
          */
@@ -224,22 +224,22 @@
                 'id'    => 1,
                 'query' => 2
             ];
-            $response = $this->json('POST', '/giphy_api/search',$data);
+            $response = $this->json('POST', '/giphy_api/search', $data);
             $response->assertStatus(422);
             $validationError = [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'query' =>  [
+                    'query' => [
                         'This entry can only contain string',
-                    ] ,
-            
-            
+                    ],
+                
+                
                 ]
             ];
             $response->assertJson($validationError);
-        
+            
         }
-    
+        
         /** Test /giphy_api/search/ endpoint with null query
          *
          */
@@ -249,24 +249,24 @@
                 'id'    => 1,
                 'query' => ''
             ];
-            $response = $this->json('POST', '/giphy_api/search',$data);
+            $response = $this->json('POST', '/giphy_api/search', $data);
             $response->assertStatus(422);
             $validationError = [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'query' =>  [
+                    'query' => [
                         'Search Query is required',
-                    ] ,
-            
-            
+                    ],
+                
+                
                 ]
             ];
             $response->assertJson($validationError);
-        
+            
         }
-    
-    
-        /** Test /giphy_api/search/ endpoint with null query
+        
+        
+        /** Test /giphy_api/search/ endpoint with invalid id
          *
          */
         public function testGifRequestSearchWithNonExistingGiphyObject(): void
@@ -275,13 +275,13 @@
                 'id'    => 50,
                 'query' => 'cat'
             ];
-            $response = $this->json('POST', '/giphy_api/search',$data);
+            $response = $this->json('POST', '/giphy_api/search', $data);
             $response->assertStatus(404);
-          
-        
+            
+            
         }
-    
-        /** Test /giphy_api/search/ endpoint with null query
+        
+        /** Test /giphy_api/search/ endpoint with valid query
          *
          */
         public function testGifRequestSearchWithValidPostData(): void
@@ -290,10 +290,10 @@
                 'id'    => 1,
                 'query' => 'cat'
             ];
-            $response = $this->json('POST', '/giphy_api/search',$data);
+            $response = $this->json('POST', '/giphy_api/search', $data);
             $response->assertStatus(200);
             
-        
+            
         }
         
     }
