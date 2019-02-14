@@ -128,7 +128,7 @@
          * @param string $tag
          * @return \Exception|ApiGiphyClient|string
          */
-        public function random($tag): ApiGiphyClient
+        public function random($tag)
         {
             $endpoint = self::$type . '/random';
             $params = array(
@@ -139,6 +139,6 @@
                 $params['api_key'] = self::getApiKey();
             }
     
-            return ApiGiphyClient::Instance()->sendRequest(self::$base_url, $endpoint, $params);
+            return ApiGiphyClient::Instance()->sendRequest(self::getBaseUrl(), $endpoint, $params);
         }
     }

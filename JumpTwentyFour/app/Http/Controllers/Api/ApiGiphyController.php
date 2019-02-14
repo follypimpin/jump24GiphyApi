@@ -93,4 +93,35 @@
             
            
         }
+        
+        
+        public function postRandom(GiphyPostSearchRequest $request)
+        {
+            $validated = Validator::make($request->all(), $request->rules(),
+                $request->messages());
+            if ($validated->fails()) {
+                response()->json(['UnprocessableEntity:' => $request->messages()], 422);
+            }
+            $data = $validated->getData();
+            $id = (int)$data['id'];
+            $query = (string)$data['query'];
+            try{
+                $giphyRepository = GiphyTypeMapperRepository::makeFor($id);
+                if($giphyRepository instanceof \Exception){
+                    return response()->json(['NotFound:' => $giphyRepository->getMessage()], 404);
+                }
+            } catch (\Exception $e) {
+                return response()->json(['NotFound:' => $e->getMessage()], 404);
+            }
+    
+            try {
+                $response = $giphyRepository->random($query);
+                if($response instanceof \GuzzleHttp\Exception\ClientException){
+                    return response()->json(['NotFound:' => $response->getMessage()], 404);
+                }
+                return response()->json($response, 200);
+            } catch (\Exception $e) {
+                return response()->json(['NotFound:' => $e->getMessage(), 404]);
+            }
+        }
     }
