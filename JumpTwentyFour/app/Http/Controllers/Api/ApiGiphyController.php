@@ -119,6 +119,7 @@
                 if($response instanceof \GuzzleHttp\Exception\ClientException){
                     return response()->json(['NotFound:' => $response->getMessage()], 404);
                 }
+              
                 return response()->json($response, 200);
             } catch (\Exception $e) {
                 return response()->json(['NotFound:' => $e->getMessage(), 404]);

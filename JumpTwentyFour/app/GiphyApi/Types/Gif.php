@@ -81,7 +81,7 @@
         /** Gets Gifs Trending Endpoint
          *
          * @param int $limit
-         *
+         * @throws \Exception
          * @return \Exception|ApiGiphyClient|string
          */
         public function trending($limit = 25)
@@ -105,12 +105,13 @@
          * @param string $query
          * @param int    $limit
          * @param int    $offset
-         *
+         * @throws \Exception
          * @return \Exception|mixed|string
          */
-        public function search($query, $limit = 20, $offset = 0)
+        public function search($query, $limit, $offset = 0)
         {
             $endpoint = self::$type . '/search';
+            $limit = ($limit!== null && $limit !== 0)? $limit :25;
             $params = array(
                 'q'      => urlencode($query),
                 'limit'  => (int)$limit,
@@ -127,6 +128,7 @@
         /** Giphy Random Endpoint
          * @param string $tag
          * @return \Exception|ApiGiphyClient|string
+         * @throws \Exception
          */
         public function random($tag)
         {

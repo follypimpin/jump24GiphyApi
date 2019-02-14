@@ -81,7 +81,7 @@
         /** Gets Stickers Trending Endpoint
          *
          * @param int $limit
-         *
+         * @throws \Exception
          * @return \Exception|ApiGiphyClient|string
          */
         public function trending($limit = 25)
@@ -103,7 +103,7 @@
          * @param string $query
          * @param int    $limit
          * @param int    $offset
-         *
+         * @throws \Exception
          * @return \Exception|mixed|string
          */
         public function search($query, $limit = 25, $offset = 0)

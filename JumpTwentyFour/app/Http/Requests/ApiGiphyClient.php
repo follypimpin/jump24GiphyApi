@@ -32,7 +32,8 @@
          * @param string $endpoint
          * @param array $params
          *
-         * @return \Exception|string
+         * @return string
+         * @throws \Exception
          */
         public static function sendRequest($base_url, $endpoint, array $params)
         {
@@ -48,7 +49,7 @@
                     if($response->getStatusCode() !== 200){
                         throw new \Exception('Request failed');
                     }
-                    return $response->getBody()->getContents();
+                    return json_decode($response->getBody()->getContents());
                 }
                 catch (GuzzleException $guzzleException){
                     return $guzzleException ;
