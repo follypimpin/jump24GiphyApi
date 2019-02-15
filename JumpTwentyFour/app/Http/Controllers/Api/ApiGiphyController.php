@@ -184,14 +184,13 @@
                 
                 unset($d);
                 
-                $chunks = collect($result)->chunk(150);
+                $chunks = collect($result)->chunk(200);
                 $start_time = microtime(true);
                 foreach ($chunks as &$chunk) {
                     $db = DB::table('gif_five_hundy')->insert($chunk->toArray());
                 }
                 unset($chunk);
-                $end_time = microtime(true);
-                $completeDb = $end_time - $start_time;
+                $completeDb =  microtime(true) - $start_time;
                 
                 
                 return response()->json([
@@ -238,7 +237,7 @@
                 }
                 $data = $response->data;
                 $result = [];
-                $time_start = microtime(true);
+           
                 foreach ($data as &$d) {
                     $result [] = [
                         'gif_id'            => $d->id,
@@ -249,24 +248,22 @@
                 }
                 
                 unset($d);
-                $time_end = microtime(true);
-                $execution_time = $time_end - $time_start;
+              
                 
-                $chunks = collect($result)->chunk(300);
-                $time_start_chunk = microtime(true);
+                $chunks = collect($result)->chunk(200);
+                $time_start = microtime(true);
                 foreach ($chunks as &$chunk) {
                     
                     $db = DB::table('gif_thou')->insert($chunk->toArray());
-                    $time_end = microtime(true);
+                  
                 }
                 unset($chunk);
-                $execution_time_db = $time_end - $time_start_chunk;
+                $execution_time = microtime(true) - $time_start;
                 $memory = memory_get_peak_usage(true) / 1024 / 1024;
                 
                 return response()->json([
                     'db_flag'             => $db,
-                    'db_completion_time'  => $execution_time_db,
-                    'data_execution_time' => $execution_time,
+                    'db_completion_time'  => $execution_time,
                     'memory-usage' => $memory
                 ]);
             } catch (\Exception $e) {
@@ -298,7 +295,7 @@
             $time_start = microtime(true);
             $lists = [];
             $query = GifChunkThouOO::whereBetween('migration_date',
-                array('2019-02-15 07:00:00', '2019-02-19 23:59:59'));
+                array('2019-02-13 07:00:00', '2019-02-19 23:00:00'));
             foreach ($query->cursor() as $gifs) {
                 $current_time = Carbon::now()->toDateTimeString();
                 // push data in to array
@@ -315,9 +312,8 @@
             }
             // perform an insert
             $db = DB::table('gif_time_stamped')->insert($lists);
-            
-            $time_end = microtime(true);
-            $execution_time_db = $time_end - $time_start;
+    
+            $execution_time_db = microtime(true) - $time_start;
             $memory = memory_get_peak_usage(true) / 1024 / 1024;
             
             
@@ -331,7 +327,7 @@
         }
     
     
-        /**
+        /** Appends Current time stamp to gif titles and inserts into DB (Using Chunk)
          * @param GiphyTypeRequest $request
          *
          * @return JsonResponse
@@ -348,7 +344,7 @@
             $time_start = microtime(true);
             
             $query = GifChunkThouOO::whereBetween('migration_date',
-                array('2019-02-15 07:00:00', '2019-02-19 23:59:59'));
+                array('2019-02-13 07:00:00', '2019-02-19 23:00:00'));
             $query->chunk(200, function ($gifs) {
                 $list = [];
                 foreach ($gifs as $item) {
@@ -368,14 +364,12 @@
                 
             });
             $memory = memory_get_peak_usage(true) / 1024 / 1024;
-            
-            $time_end = microtime(true);
-            $execution_time_db = $time_end - $time_start;
+    
+            $execution_time_db = microtime(true)- $time_start;
+           
             
             return response()->json([
                 'db_flag'       => true,
-                'time_start'    => $time_start,
-                'time_end'      => $time_end,
                 'db_completion' => $execution_time_db,
                 'memory_usage' => $memory
             ]);

@@ -1,4 +1,4 @@
-# Project Title
+# JumpTwenty4
 A Jump24 task  using the Giphy API: https://developers.giphy.com/docs/ , within Laravel.:
 
 ## Getting Started
@@ -227,17 +227,8 @@ Query
 | `insert 100 per iteration` | 0.07692408561706543  | **passed by ref**  |
 | `insert 200 per iteration` | 0.14775919914245605  | **passed by val**  |
 | `insert 200 per iteration` | 0.04747796058654785  | **passed by ref**  |
-| `insert 250 per iteration` | 0.05800294876098633  | **passed by val**  |
-| `insert 250 per iteration` | 0.0983421802520752   | **passed by ref**  |
 
-| fetchSearchRandom(Chunk) | DB Completion (ms)      | Description       |
-| ----------------- | ----------------------------- |--------------------|
-| `insert 100 per iteration` | 0.08372998237609863  | **passed by val**  |
-| `insert 100 per iteration` | 0.07692408561706543  | **passed by ref**  |
-| `insert 200 per iteration` | 0.14775919914245605  | **passed by val**  |
-| `insert 200 per iteration` | 0.04747796058654785  | **passed by ref**  |
-| `insert 250 per iteration` | 0.05800294876098633  | **passed by val**  |
-| `insert 250 per iteration` | 0.0983421802520752   | **passed by ref**  |
+
 
 ```
 1000 records from search Giphy gif search end point - using chunk() 
@@ -270,7 +261,7 @@ Query DB using indexed migrate_date [TimeStamp]
 | appendCursorTimeStamp(Using Cursors) | DB Completion (ms)      | Description             |Memory Peak |
 | ------------------------------------ | ----------------------- |-------------------------|------------|
 | `inserted mass 985 records`| 0.23484492301940918               | **laravel cursor**      | **2**      |
-| `inserted mass 985 records`| 0.2549459934234619               | **laravel cursor**       | **2**      |
+| `inserted mass 985 records`| 0.2549459934234619                | **laravel cursor**       | **2**      |
 | `inserted mass 961 records`| 0.17969012260437012               | **laravel cursor**       | **4**      |
 
 ```
@@ -281,7 +272,7 @@ Query DB using indexed migrate_date [TimeStamp]
 
 | `insert 200 per iteration` | 0.12642788887023926    | **laravel chunk passed by val**    |              |
 | `insert 200 per iteration` | 0.21620512008666992    | **laravel chunk passed by ref**    |              |
-| `insert 200 per iteration` | 0.2465660572052002    | **laravel chunk passed by val**     |   **2**      |
+| `insert 200 per iteration` | 0.2465660572052002     | **laravel chunk passed by val**     |   **2**      |
 | `insert 250 per iteration` | 0.22419309616088867    | **laravel chunk passed by val**    |   n/a        |
 | `insert 250 per iteration` | 0.21016907691955566    | **laravel chunk passed by val**    |  **2**       |
 
