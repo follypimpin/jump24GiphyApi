@@ -48,9 +48,11 @@ Enter/edit the DB credentials in ".env"
    - `php artisan migrate:fresh` recreates all tables in the database
 ```
 ## Testing Routes
-Simply navigate to the url below
+Simply navigate to the url below to get either Gifs or Stickers
 ```
+1 - Gif & 2 - Stickers
 http://127.0.0.1/giphy_api/trending/1
+http://127.0.0.1/giphy_api/trending/2
 ```
 Sample Response
 ```
@@ -209,10 +211,73 @@ GifEndPointTest - All the Giphy Gif related endpoints
 GifTest - All gif related methods
 
 ```
+## Benchmark and Optimisation Result
+```
+500 records from performing Giphy gif search end point - using chunk()
+Query 
+{
+        "id" : 1,
+        "query" : "cats"
+      
+}
+```
+| fetchSearchRandom(Chunk) | DB Completion (ms)      | Description       |
+| ----------------- | ----------------------------- |--------------------|
+| `insert 100 per iteration` | 0.08372998237609863  | **passed by val**  |
+| `insert 100 per iteration` | 0.07692408561706543  | **passed by ref**  |
+| `insert 200 per iteration` | 0.14775919914245605  | **passed by val**  |
+| `insert 200 per iteration` | 0.04747796058654785  | **passed by ref**  |
+| `insert 250 per iteration` | 0.05800294876098633  | **passed by val**  |
+| `insert 250 per iteration` | 0.0983421802520752   | **passed by ref**  |
+
+| fetchSearchRandom(Chunk) | DB Completion (ms)      | Description       |
+| ----------------- | ----------------------------- |--------------------|
+| `insert 100 per iteration` | 0.08372998237609863  | **passed by val**  |
+| `insert 100 per iteration` | 0.07692408561706543  | **passed by ref**  |
+| `insert 200 per iteration` | 0.14775919914245605  | **passed by val**  |
+| `insert 200 per iteration` | 0.04747796058654785  | **passed by ref**  |
+| `insert 250 per iteration` | 0.05800294876098633  | **passed by val**  |
+| `insert 250 per iteration` | 0.0983421802520752   | **passed by ref**  |
+
+```
+1000 records from search Giphy gif search end point - using chunk() 
+Query 
+{
+        "id" : 1,
+        "query" : "dogs"
+      
+}
+
+
+```
+| fetchSearchThouRandom(Chunk) | DB Completion (ms)      | Description   |
+| ----------------- | ----------------------------- |--------------------|
+| `insert 200 per iteration` | 0.08954501152038574  | **passed by ref**  |
+| `insert 300 per iteration` | 0.12642788887023926  | **passed by ref**  |
+| `insert 500 per iteration` | 0.15838193893432617  | **passed by val**  |
+| `insert 500 per iteration` | 0.10385298728942871  | **passed by ref**  |
+```
+Build a SQL statement that iterates over each random record, modifies its name to
+append a timestamp, and stores it to a new table
+Query DB using indexed migrate_date [TimeStamp]
+{
+        "from" : "2019-02-15 07:00:00",
+        "to" : "2019-02-19 23:59:59"
+      
+}
+
+```
+| appendCursorTimeStamp(Using Cursors count(985) | DB Completion (ms)      | Description   |
+| ----------------- | ----------------------------- |--------------------|
+| `inserted mass `           | 5.264067888259888    | **laravel cursor**                   |
+| `insert 200 per iteration` | 0.12642788887023926  | **laravel chunk passed by val**      |
+| `insert 200 per iteration` | 0.21620512008666992  | **laravel chunk passed by ref**      |
+| `insert 250 per iteration` | 0.22419309616088867  | **laravel chunk passed by val**      |
+```
+
 
 ## Work Undertaken
-These classes were created
-Add additional notes about how to deploy this on a live system
+
 
 ## Built With
 
