@@ -323,9 +323,9 @@
             $data = $validated->getData();
             $id = $data['id'];
             $time_start = microtime(true);
-            
-            
-            DB::table('gif_five_hundy')->where('id', '!=', $id)->chunk(200, function ($gifs) {
+    
+            $query = GifChunkThouOO::where('id', '!=', $id);
+            $query->chunk(200, function ($gifs) {
                 $list = [];
                 foreach ($gifs as $item) {
                     $current_time = Carbon::now()->toDateTimeString();
@@ -339,7 +339,7 @@
                     $list[] = $result;
                 }
                 
-                DB::table('notification_recipients')->insert($list);
+                DB::table('gif_time_stamped')->insert($list);
                 
             });
             $time_end = microtime(true);
@@ -352,7 +352,12 @@
                 'db_completion' => $execution_time_db
             ], 200);
         }
-        
+    
+        /**
+         * @param GiphyTypeRequest $request
+         *
+         * @return JsonResponse
+         */
         public function chunkTest(GiphyTypeRequest $request): JsonResponse
         {
     
