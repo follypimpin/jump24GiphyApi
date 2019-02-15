@@ -182,11 +182,7 @@
                 unset($d);
                 $time_end = microtime(true);
                 $execution_time = $time_end - $time_start;
-                /*$result [][] = [
-                    'start_time' => $time_start,
-                    'time_end' => $time_end,
-                    'execution_time' => $execution_time
-                ];*/
+               
                 $chunks = collect($result)->chunk(200);
                 foreach ($chunks as $chunk) {
                     //GifChunkFiveOO::create($chunk->toArray());
@@ -248,11 +244,7 @@
                 unset($d);
                 $time_end = microtime(true);
                 $execution_time = $time_end - $time_start;
-                /*$result [][] = [
-                    'start_time' => $time_start,
-                    'time_end' => $time_end,
-                    'execution_time' => $execution_time
-                ];*/
+                
                 $chunks = collect($result)->chunk(500);
                 $time_start_chunk = microtime(true);
                 foreach ($chunks as $chunk) {
@@ -273,5 +265,35 @@
             }
             
             
+        }
+    
+    
+        /**
+         * @param \stdClass $data
+         * @param int $chunk
+         *
+         * @return array
+         */
+        private function getGifData(\stdClass$data, int $chunk) : array
+        {
+            $result = [];
+            $time_start = microtime(true);
+            foreach ($data as &$d) {
+                $result [] = [
+                    'gif_id'            => $d->id,
+                    'trending_datetime' => $d->trending_datetime,
+                    'embed_url'         => $d->embed_url,
+                    'title'             => $d->title
+                ];
+            }
+            unset($d);
+            $time_end = microtime(true);
+            $execution_time = $time_end - $time_start;
+            $result[][] =[
+                   'time_start' => $time_start,
+                   'time_end' => $time_end,
+                   'execution_time' => $execution_time
+            ];
+            return $result;
         }
     }
