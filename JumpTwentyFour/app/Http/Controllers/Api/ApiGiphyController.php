@@ -256,16 +256,17 @@
                 $chunks = collect($result)->chunk(500);
                 $time_start_chunk = microtime(true);
                 foreach ($chunks as $chunk) {
-                    //GifChunkFiveOO::create($chunk->toArray());
+                    
                     $db = DB::table('gif_thou')->insert($chunk->toArray());
                     $time_end = microtime(true);
                 }
-                $execution_time = $time_end - $time_start_chunk;
+                $execution_time_db = $time_end - $time_start_chunk;
                 
                 
                 return response()->json([
                     'db_flag'         => $db,
-                    'db_completion_time' => $execution_time
+                    'db_completion_time' => $execution_time_db,
+                    'data_execution_time' => $execution_time
                 ], 200);
             } catch (\Exception $e) {
                 return response()->json(['NotFound:' => $e->getMessage(), 404]);
