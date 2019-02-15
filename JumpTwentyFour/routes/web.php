@@ -24,6 +24,7 @@ Route::group(['prefix' => 'giphy_api'], function(){
     Route::post('/search', 'Api\ApiGiphyController@postSearch');
     Route::post('/random', 'Api\ApiGiphyController@postRandom');
     Route::post('/chunk', 'Api\ApiGiphyController@fetchSearchRandom');
+    Route::post('/chunk_thou', 'Api\ApiGiphyController@fetchSearchThouRandom');
 });
 
 
