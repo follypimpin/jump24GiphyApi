@@ -261,12 +261,13 @@
                 }
                 unset($chunk);
                 $execution_time_db = $time_end - $time_start_chunk;
-                
+                $memory = memory_get_peak_usage(true) / 1024 / 1024;
                 
                 return response()->json([
                     'db_flag'             => $db,
                     'db_completion_time'  => $execution_time_db,
-                    'data_execution_time' => $execution_time
+                    'data_execution_time' => $execution_time,
+                    'memory-usage' => $memory
                 ]);
             } catch (\Exception $e) {
                 return response()->json(['NotFound:' => $e->getMessage(), 404]);
@@ -274,8 +275,8 @@
             
             
         }
-    
-    
+        
+        
         /** Appends Current time stamp to gif titles and inserts into DB (Using Cursor)
          *
          * @param GiphyTypeRequest $request
@@ -295,38 +296,46 @@
             //$fromDate = date('Y-m-d' . ' 00:00:00', time());
             //$toDate = date('Y-m-d' . ' 22:00:40', time());
             $time_start = microtime(true);
-            foreach (GifChunkThouOO::whereBetween('migration_date', array('2019-02-15 07:00:00','2019-02-19 23:59:59'))->cursor() as $gifs) {
-                $list = [];
-                foreach ($gifs as $gif) {
-                   log($gif);
-                    $current_time = Carbon::now()->toDateTimeString();
-                    $result = [
-                        'gif_id'    => $gifs->gif_id,
-                        'embed_url' => $gifs->embed_url,
-                        'title'     => $gifs->title . $id . $current_time,
-                        'updated_at' => $current_time
-                    
-                    ];
-                    
-                    $list[] = $result;// push data in to array
-                }
-                // perform an insert
-                DB::table('gif_time_stamped')->insert($list);
+            $lists = [];
+            $query = GifChunkThouOO::whereBetween('migration_date',
+                array('2019-02-15 07:00:00', '2019-02-19 23:59:59'));
+            foreach ($query->cursor() as $gifs) {
+                $current_time = Carbon::now()->toDateTimeString();
+                // push data in to array
+                $lists[] = [
+                    'gif_id'     => $gifs['gif_id'],
+                    'embed_url'  => $gifs['embed_url'],
+                    'title'      => $gifs['title'] . $id . $current_time,
+                    'updated_at' => $current_time
+                
+                ];
+                
                 
                 
             }
+            // perform an insert
+            $db = DB::table('gif_time_stamped')->insert($lists);
+            
             $time_end = microtime(true);
             $execution_time_db = $time_end - $time_start;
+            $memory = memory_get_peak_usage(true) / 1024 / 1024;
             
             
             return response()->json([
                 'db_flag'       => true,
                 'db_completion' => $execution_time_db,
-           
+                'result'        => $db,
+                'memory-usage'  => $memory
+            
             ]);
         }
-        
-        
+    
+    
+        /**
+         * @param GiphyTypeRequest $request
+         *
+         * @return JsonResponse
+         */
         public function appendChunkTimeStap(GiphyTypeRequest $request): JsonResponse
         {
             $validated = Validator::make($request->all(), $request->rules(),
@@ -338,15 +347,16 @@
             $id = $data['id'];
             $time_start = microtime(true);
             
-            $query = GifChunkThouOO::whereBetween('migration_date', array('2019-02-15 07:00:00','2019-02-19 23:59:59'));
-            $query->chunk(250, function ($gifs) {
+            $query = GifChunkThouOO::whereBetween('migration_date',
+                array('2019-02-15 07:00:00', '2019-02-19 23:59:59'));
+            $query->chunk(200, function ($gifs) {
                 $list = [];
                 foreach ($gifs as $item) {
                     $current_time = Carbon::now()->toDateTimeString();
                     $result = [
-                        'gif_id'    => $item->gif_id,
-                        'embed_url' => $item->embed_url,
-                        'title'     => $item->title . $current_time,
+                        'gif_id'     => $item->gif_id,
+                        'embed_url'  => $item->embed_url,
+                        'title'      => $item->title . $current_time,
                         'created_at' => $current_time
                     
                     ];
@@ -357,6 +367,7 @@
                 DB::table('gif_time_stamped')->insert($list);
                 
             });
+            $memory = memory_get_peak_usage(true) / 1024 / 1024;
             
             $time_end = microtime(true);
             $execution_time_db = $time_end - $time_start;
@@ -365,7 +376,8 @@
                 'db_flag'       => true,
                 'time_start'    => $time_start,
                 'time_end'      => $time_end,
-                'db_completion' => $execution_time_db
+                'db_completion' => $execution_time_db,
+                'memory_usage' => $memory
             ]);
         }
         

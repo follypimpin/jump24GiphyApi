@@ -267,13 +267,23 @@ Query DB using indexed migrate_date [TimeStamp]
 }
 
 ```
-| appendCursorTimeStamp(Using Cursors count(985) | DB Completion (ms)      | Description   |
-| ----------------- | ----------------------------- |--------------------|
-| `inserted mass `           | 5.264067888259888    | **laravel cursor**                   |
-| `insert 200 per iteration` | 0.12642788887023926  | **laravel chunk passed by val**      |
-| `insert 200 per iteration` | 0.21620512008666992  | **laravel chunk passed by ref**      |
-| `insert 250 per iteration` | 0.22419309616088867  | **laravel chunk passed by val**      |
+| appendCursorTimeStamp(Using Cursors) | DB Completion (ms)      | Description             |Memory Peak |
+| ------------------------------------ | ----------------------- |-------------------------|------------|
+| `inserted mass 985 records`| 0.23484492301940918               | **laravel cursor**      | **2**      |
+| `inserted mass 985 records`| 0.2549459934234619               | **laravel cursor**       | **2**      |
+| `inserted mass 961 records`| 0.17969012260437012               | **laravel cursor**       | **4**      |
+
 ```
+
+```
+| appendChunkTimeStap(Using Chunks) | DB Completion (ms)      | Description                |  Memory Peak |
+| ----------------------------------| ----------------------  |----------------------------|---------------|
+
+| `insert 200 per iteration` | 0.12642788887023926    | **laravel chunk passed by val**    |              |
+| `insert 200 per iteration` | 0.21620512008666992    | **laravel chunk passed by ref**    |              |
+| `insert 200 per iteration` | 0.2465660572052002    | **laravel chunk passed by val**     |   **2**      |
+| `insert 250 per iteration` | 0.22419309616088867    | **laravel chunk passed by val**    |   n/a        |
+| `insert 250 per iteration` | 0.21016907691955566    | **laravel chunk passed by val**    |  **2**       |
 
 
 ## Work Undertaken
