@@ -2,6 +2,7 @@
     
     namespace App\Http\Controllers\Api;
     
+    use App\GifModel\GifChunkFiveOO;
     use Illuminate\Http\JsonResponse;
     use Illuminate\Http\Request;
     use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@
     use App\Http\Requests\GiphyRequests\GiphyTypeRequest;
     use Illuminate\Support\Facades\Validator;
     use App\Http\Requests\GiphyRequests\GiphyPostSearchRequest;
+    use Illuminate\Support\Facades\DB;
     
     
     class ApiGiphyController extends Controller
@@ -166,27 +168,30 @@
                 $time_start = microtime(true);
                 foreach ($data as &$d){
                     $result [] = [
-                        'id' => $d->id,
+                        'gif_id' => $d->id,
                         'trending_datetime'=> $d->trending_datetime,
                         'embed_url' => $d->embed_url,
+                        'title' => $d->title
                     ];
                 }
                 
                 unset($d);
                 $time_end = microtime(true);
                 $execution_time = $time_end - $time_start;
-                $result [][] = [
+                /*$result [][] = [
                     'start_time' => $time_start,
-                    '$time_end' => $time_end,
+                    'time_end' => $time_end,
                     'execution_time' => $execution_time
-                ];
+                ];*/
+                $chunks = collect($result)->chunk(200);
+                foreach($chunks as $chunk){
+                    //GifChunkFiveOO::create($chunk->toArray());
+                     $db = DB::table('gif_five_hundy')->insert($chunk->toArray());
+                }
+           
+              
                
-                /*$dummyTwo = $collection->filter(function($value, $key) {
-                    return $value['id'] ;
-                });*/
-               // $dummyTwo = $dummy->only(['id','trending_datetime','embed_url']);
-               
-                return response()->json($result,200);
+                return response()->json($db,200);
             } catch (\Exception $e) {
                 return response()->json(['NotFound:' => $e->getMessage(), 404]);
             }
