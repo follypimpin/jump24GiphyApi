@@ -346,6 +346,7 @@
             
             $query = GifChunkThouOO::whereBetween('migration_date',
                 array('2019-02-13 07:00:00', '2019-02-19 23:00:00'));
+            // to add ->orderBy('migration_date')
             $query->chunk(200, function ($gifs) {
                 $list = [];
                 foreach ($gifs as $item) {
@@ -375,9 +376,10 @@
                 'memory_usage'  => $memory
             ]);
         }
-    
-    
+        
+        
         /** Gets time stamped Gifs based on migration date (Using Cursor)
+         *
          * @param GiphySearchLatestRequest $request
          *
          * @return JsonResponse
@@ -412,14 +414,15 @@
             $memory = memory_get_peak_usage(true) / 1024 / 1024;
             
             return response()->json([
-                'stampedCursorList'   => $lists,
-                'db_completion' => $execution_time,
-                'memory_usage'  => $memory
+                'stampedCursorList' => $lists,
+                'db_completion'     => $execution_time,
+                'memory_usage'      => $memory
             ]);
         }
-    
-    
+        
+        
         /** Gets time stamped Gifs based on migration date (Using Chunk)
+         *
          * @param GiphySearchLatestRequest $request
          *
          * @return JsonResponse
@@ -432,26 +435,40 @@
                 response()->json(['UnprocessableEntity:' => $request->messages()], 422);
             }
             $data = $validated->getData();
-           $lists = [];
-            DB::table('gif_time_stamped')->whereBetween('migration_date',
-                array($data['start_date'], $data['end_date']))->chunk(200, function ($gifs) {
-                $list = [];
-                    foreach ($gifs as $key => $value) {
-                        $list[$key] = [
-                            'gif_id'     => $value['gif_id'],
-                            'embed_url'  => $value['embed_url'],
-                            'title'      => $value['title'] ,
-                            'trending_datetime' => $value['trending_datetime']
-    
-                        ];
-                    
-                }
-            });
-            
-           
-            
-           // $lists = $query->toArray();
+            $lists = [];
             $time_start = microtime(true);
+            $dummy = DB::table('gif_time_stamped')->whereBetween('migration_date',
+                                        array($data['start_date'], $data['end_date'])
+                                         )->orderBy('migration_date')->chunk(200, function ($gifs) {
+                $list = [];
+                foreach ($gifs as $item) {
+                    $result = [
+                        'gif_id'            => $item->gif_id,
+                        'embed_url'         => $item->embed_url,
+                        'title'             => $item->title,
+                        'trending_datetime' => $item->trending_datetime,
+                        'migration_date'    => $item->migration_date
+                    
+                    ];
+                    
+                    $list[] = $result;
+                }
+                
+            
+                
+                
+            });
+    
+            $execution_time = microtime(true) - $time_start;
+            $memory = memory_get_peak_usage(true) / 1024 / 1024;
+    
+            return response()->json([
+                'stampedChunkList' => $dummy,
+                'db_completion'    => $execution_time,
+                'memory_usage'     => $memory
+            ]);
+            // $lists = $query->toArray();
+            
             /*$result = $query->chunk(200, function ($gifs) {
                 $list = [];
                 foreach ($gifs as $item) {
@@ -473,15 +490,7 @@
             });
             */
             
-            $execution_time = microtime(true) - $time_start;
-        
-            $memory = memory_get_peak_usage(true) / 1024 / 1024;
-        
-            return response()->json([
-                'stampedChunkList'   => $lists,
-                'db_completion' => $execution_time,
-                'memory_usage'  => $memory
-            ]);
+            
         }
         
         
