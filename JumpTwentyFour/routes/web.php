@@ -27,7 +27,9 @@ Route::group(['prefix' => 'giphy_api'], function(){
     Route::post('/chunk_more_random', 'Api\ApiGiphyController@fetchSearchThouRandom');
     Route::get('/cursor_time_stamp/{id}', 'Api\ApiGiphyController@appendCursorTimeStamp');
     Route::get('/chunk_time_stamp/{id}', 'Api\ApiGiphyController@appendChunkTimeStap');
-    Route::get('/non_cursor/chunk{id}', 'Api\ApiGiphyController@chunkTest');
+    Route::post('/search_cursor_latest', 'Api\ApiGiphyController@searchLatestCursor');
+    Route::post('/search_chunk_latest', 'Api\ApiGiphyController@searchLatestChunk');
+
 });
 
 

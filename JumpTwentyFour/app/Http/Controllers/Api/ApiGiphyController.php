@@ -5,6 +5,7 @@
     use App\GifModel\GifChunkFiveOO;
     use App\GifModel\GifChunkThouOO;
     use App\GifModel\GifTimeStamped;
+    use App\Http\Requests\GiphyRequests\GiphySearchLatestRequest;
     use Carbon\Carbon;
     use Illuminate\Http\JsonResponse;
     use Illuminate\Http\Request;
@@ -190,7 +191,7 @@
                     $db = DB::table('gif_five_hundy')->insert($chunk->toArray());
                 }
                 unset($chunk);
-                $completeDb =  microtime(true) - $start_time;
+                $completeDb = microtime(true) - $start_time;
                 
                 
                 return response()->json([
@@ -237,7 +238,7 @@
                 }
                 $data = $response->data;
                 $result = [];
-           
+                
                 foreach ($data as &$d) {
                     $result [] = [
                         'gif_id'            => $d->id,
@@ -248,23 +249,23 @@
                 }
                 
                 unset($d);
-              
+                
                 
                 $chunks = collect($result)->chunk(200);
                 $time_start = microtime(true);
                 foreach ($chunks as &$chunk) {
                     
                     $db = DB::table('gif_thou')->insert($chunk->toArray());
-                  
+                    
                 }
                 unset($chunk);
                 $execution_time = microtime(true) - $time_start;
                 $memory = memory_get_peak_usage(true) / 1024 / 1024;
                 
                 return response()->json([
-                    'db_flag'             => $db,
-                    'db_completion_time'  => $execution_time,
-                    'memory-usage' => $memory
+                    'db_flag'            => $db,
+                    'db_completion_time' => $execution_time,
+                    'memory-usage'       => $memory
                 ]);
             } catch (\Exception $e) {
                 return response()->json(['NotFound:' => $e->getMessage(), 404]);
@@ -308,11 +309,10 @@
                 ];
                 
                 
-                
             }
             // perform an insert
             $db = DB::table('gif_time_stamped')->insert($lists);
-    
+            
             $execution_time_db = microtime(true) - $time_start;
             $memory = memory_get_peak_usage(true) / 1024 / 1024;
             
@@ -325,9 +325,10 @@
             
             ]);
         }
-    
-    
+        
+        
         /** Appends Current time stamp to gif titles and inserts into DB (Using Chunk)
+         *
          * @param GiphyTypeRequest $request
          *
          * @return JsonResponse
@@ -359,20 +360,159 @@
                     
                     $list[] = $result;
                 }
-                /*unset($item);*/
+                
                 DB::table('gif_time_stamped')->insert($list);
                 
             });
             $memory = memory_get_peak_usage(true) / 1024 / 1024;
-    
-            $execution_time_db = microtime(true)- $time_start;
-           
+            
+            $execution_time_db = microtime(true) - $time_start;
+            
             
             return response()->json([
                 'db_flag'       => true,
                 'db_completion' => $execution_time_db,
-                'memory_usage' => $memory
+                'memory_usage'  => $memory
             ]);
+        }
+    
+    
+        /** Gets time stamped Gifs based on migration date (Using Cursor)
+         * @param GiphySearchLatestRequest $request
+         *
+         * @return JsonResponse
+         */
+        public function searchLatestCursor(GiphySearchLatestRequest $request): JsonResponse
+        {
+            $validated = Validator::make($request->all(), $request->rules(),
+                $request->messages());
+            if ($validated->fails()) {
+                response()->json(['UnprocessableEntity:' => $request->messages()], 422);
+            }
+            $data = $validated->getData();
+            $query = GifTimeStamped::whereBetween('migration_date',
+                array($data['start_date'], $data['end_date']));
+            $lists = [];
+            $time_start = microtime(true);
+            foreach ($query->cursor() as $gifs) {
+                /* $current_time = Carbon::now()->toDateTimeString();*/
+                // push data in to array
+                $lists[] = [
+                    'gif_id'    => $gifs['gif_id'],
+                    'embed_url' => $gifs['embed_url'],
+                    'title'     => $gifs['title']
+                
+                
+                ];
+                
+                
+            }
+            $execution_time = microtime(true) - $time_start;
+            
+            $memory = memory_get_peak_usage(true) / 1024 / 1024;
+            
+            return response()->json([
+                'stampedCursorList'   => $lists,
+                'db_completion' => $execution_time,
+                'memory_usage'  => $memory
+            ]);
+        }
+    
+    
+        /** Gets time stamped Gifs based on migration date (Using Chunk)
+         * @param GiphySearchLatestRequest $request
+         *
+         * @return JsonResponse
+         */
+        public function searchLatestChunk(GiphySearchLatestRequest $request): JsonResponse
+        {
+            $validated = Validator::make($request->all(), $request->rules(),
+                $request->messages());
+            if ($validated->fails()) {
+                response()->json(['UnprocessableEntity:' => $request->messages()], 422);
+            }
+            $data = $validated->getData();
+           $lists = [];
+            DB::table('gif_time_stamped')->whereBetween('migration_date',
+                array($data['start_date'], $data['end_date']))->chunk(200, function ($gifs) {
+                $list = [];
+                    foreach ($gifs as $key => $value) {
+                        $list[$key] = [
+                            'gif_id'     => $value['gif_id'],
+                            'embed_url'  => $value['embed_url'],
+                            'title'      => $value['title'] ,
+                            'trending_datetime' => $value['trending_datetime']
+    
+                        ];
+                    
+                }
+            });
+            
+           
+            
+           // $lists = $query->toArray();
+            $time_start = microtime(true);
+            /*$result = $query->chunk(200, function ($gifs) {
+                $list = [];
+                foreach ($gifs as $item) {
+    
+                    $list[] = [
+                        'gif_id'     => $item->gif_id,
+                        'embed_url'  => $item->embed_url,
+                        'title'      => $item->title ,
+                        'trending_datetime' => $item->trending_datetime
+            
+                    ];
+            
+                   //$list[] = $result;
+                }
+        
+               return $list;
+                //$list[] = $result;
+        
+            });
+            */
+            
+            $execution_time = microtime(true) - $time_start;
+        
+            $memory = memory_get_peak_usage(true) / 1024 / 1024;
+        
+            return response()->json([
+                'stampedChunkList'   => $lists,
+                'db_completion' => $execution_time,
+                'memory_usage'  => $memory
+            ]);
+        }
+        
+        
+        /**
+         * @param \stdClass $data
+         * @param int       $chunk
+         *
+         * @return array
+         */
+        private function getGifData(\stdClass $data, int $chunk): array
+        {
+            $result = [];
+            $time_start = microtime(true);
+            foreach ($data as &$d) {
+                $result [] = [
+                    'gif_id'            => $d->id,
+                    'trending_datetime' => $d->trending_datetime,
+                    'embed_url'         => $d->embed_url,
+                    'title'             => $d->title
+                ];
+            }
+            unset($d);
+            $time_end = microtime(true);
+            $execution_time = $time_end - $time_start;
+            $result[][] = [
+                'time_start'     => $time_start,
+                'time_end'       => $time_end,
+                'execution_time' => $execution_time
+            ];
+            
+            return $result;
         }
         
         
@@ -425,36 +565,5 @@
                 'time_end'      => $time_end,
                 'db_completion' => $execution_time_db
             ], 200);
-        }
-        
-        
-        /**
-         * @param \stdClass $data
-         * @param int       $chunk
-         *
-         * @return array
-         */
-        private function getGifData(\stdClass $data, int $chunk): array
-        {
-            $result = [];
-            $time_start = microtime(true);
-            foreach ($data as &$d) {
-                $result [] = [
-                    'gif_id'            => $d->id,
-                    'trending_datetime' => $d->trending_datetime,
-                    'embed_url'         => $d->embed_url,
-                    'title'             => $d->title
-                ];
-            }
-            unset($d);
-            $time_end = microtime(true);
-            $execution_time = $time_end - $time_start;
-            $result[][] = [
-                'time_start'     => $time_start,
-                'time_end'       => $time_end,
-                'execution_time' => $execution_time
-            ];
-            
-            return $result;
         }
     }
