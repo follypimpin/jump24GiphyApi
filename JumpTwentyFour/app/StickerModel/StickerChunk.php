@@ -4,6 +4,14 @@ namespace App\StickerModel;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\StickerModel\StickerChunk
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\StickerModel\StickerChunk newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\StickerModel\StickerChunk newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\StickerModel\StickerChunk query()
+ * @mixin \Eloquent
+ */
 class StickerChunk extends Model
 {
     /**

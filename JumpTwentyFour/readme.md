@@ -211,7 +211,7 @@ GifEndPointTest - All the Giphy Gif related endpoints
 GifTest - All gif related methods
 
 ```
-## Benchmark and Optimisation Result
+## Benchmarking and Optimisation SQL statement 
 ```
 500 records from performing Giphy gif search end point - using chunk()
 Query 
@@ -275,7 +275,28 @@ Query DB using indexed migrate_date [TimeStamp]
 | `insert 200 per iteration` | 0.2465660572052002     | **laravel chunk passed by val**     |   **2**      |
 | `insert 250 per iteration` | 0.22419309616088867    | **laravel chunk passed by val**    |   n/a        |
 | `insert 250 per iteration` | 0.21016907691955566    | **laravel chunk passed by val**    |  **2**       |
+```
+Backend implementation of basic interface to execute a search, and return the results of the search
+Query DB using indexed migrate_date [TimeStamp]
+{
+  "start_date": "2019-02-15 20:54:34",
+  "end_date": "2019-02-28 20:54:34"
+}
 
+```
+| searchLatestCursor(Using Cursors) | DB Completion (ms)      | Description             |Memory Peak |
+| ------------------------------------ | ----------------------- |-------------------------|------------|
+| `retrieved 801 records`    | 0.25054502487182617               | **laravel cursor**      | **2**      |
+| `retrieved 850 records`    | 0.2222609519958496                | **laravel cursor**       | **2**      |
+| `retrieved 919 records`    | 0.16278409957885742               | **laravel cursor**       | **4**      |
+| `retrieved 879 records`    | 0.18886089324951172               | **laravel cursor**       | **2**      |
+
+| searchLatestNonCursor(Using normal get()) | DB Completion (ms)      | Description      |  Memory Peak |
+| ----------------------------------| ----------------------  |----------------------------|---------------|
+
+| `retrieved 801 records`           | 0.14152193069458008    | **laravel get**             |               |
+| `retrieved 919 records`           | 0.15457391738891602     | **laravel get**            |   **4**       |
+| `retrieved 879 records`          | 0.15200114250183105    | **laravel get**              |   **4**       |
 
 ## Work Undertaken
 

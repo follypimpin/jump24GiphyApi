@@ -290,9 +290,7 @@
             }
             $data = $validated->getData();
             $id = $data['id'];
-            
-            //$fromDate = date('Y-m-d' . ' 00:00:00', time());
-            //$toDate = date('Y-m-d' . ' 22:00:40', time());
+           
             $time_start = microtime(true);
             $lists = [];
             $query = GifChunkThouOO::whereBetween('migration_date',
@@ -421,13 +419,13 @@
         }
         
         
-        /** Gets time stamped Gifs based on migration date (Using Chunk)
+        /** Gets time stamped Gifs based on migration date
          *
          * @param GiphySearchLatestRequest $request
          *
          * @return JsonResponse
          */
-        public function searchLatestChunk(GiphySearchLatestRequest $request): JsonResponse
+        public function searchLatestNonCursor(GiphySearchLatestRequest $request): JsonResponse
         {
             $validated = Validator::make($request->all(), $request->rules(),
                 $request->messages());
@@ -435,62 +433,51 @@
                 response()->json(['UnprocessableEntity:' => $request->messages()], 422);
             }
             $data = $validated->getData();
-            $lists = [];
+        
             $time_start = microtime(true);
-            $dummy = DB::table('gif_time_stamped')->whereBetween('migration_date',
-                                        array($data['start_date'], $data['end_date'])
-                                         )->orderBy('migration_date')->chunk(200, function ($gifs) {
-                $list = [];
-                foreach ($gifs as $item) {
-                    $result = [
-                        'gif_id'            => $item->gif_id,
-                        'embed_url'         => $item->embed_url,
-                        'title'             => $item->title,
-                        'trending_datetime' => $item->trending_datetime,
-                        'migration_date'    => $item->migration_date
-                    
-                    ];
-                    
-                    $list[] = $result;
-                }
-                
-            
-                
-                
-            });
-    
+            $lists = GifTimeStamped::getMigratedRange($data['start_date'], $data['end_date']);
             $execution_time = microtime(true) - $time_start;
             $memory = memory_get_peak_usage(true) / 1024 / 1024;
     
             return response()->json([
-                'stampedChunkList' => $dummy,
+                'stampedChunkList' => $lists,
                 'db_completion'    => $execution_time,
                 'memory_usage'     => $memory
             ]);
-            // $lists = $query->toArray();
             
-            /*$result = $query->chunk(200, function ($gifs) {
-                $list = [];
-                foreach ($gifs as $item) {
+            
+            
+        }
     
-                    $list[] = [
-                        'gif_id'     => $item->gif_id,
-                        'embed_url'  => $item->embed_url,
-                        'title'      => $item->title ,
-                        'trending_datetime' => $item->trending_datetime
-            
-                    ];
-            
-                   //$list[] = $result;
-                }
+    
+        /** Gets time stamped Gifs based on migration date
+         *
+         * @param GiphySearchLatestRequest $request
+         *
+         * @return JsonResponse
+         */
+        public function searchPaginated(GiphySearchLatestRequest $request): JsonResponse
+        {
+            $validated = Validator::make($request->all(), $request->rules(),
+                $request->messages());
+            if ($validated->fails()) {
+                response()->json(['UnprocessableEntity:' => $request->messages()], 422);
+            }
+            $data = $validated->getData();
         
-               return $list;
-                //$list[] = $result;
+            $time_start = microtime(true);
+            $lists = GifTimeStamped::getMigratedPaginateRange($data['start_date'], $data['end_date']);
+            $execution_time = microtime(true) - $time_start;
+            $memory = memory_get_peak_usage(true) / 1024 / 1024;
         
-            });
-            */
-            
-            
+            return response()->json([
+                'stampedChunkList' => $lists,
+                'db_completion'    => $execution_time,
+                'memory_usage'     => $memory
+            ]);
+        
+        
+        
         }
         
         
