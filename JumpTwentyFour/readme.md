@@ -296,7 +296,7 @@ Query DB using indexed migrate_date [TimeStamp]
 
 | `retrieved 801 records`           | 0.14152193069458008    | **laravel get**             |               |
 | `retrieved 919 records`           | 0.15457391738891602     | **laravel get**            |   **4**       |
-| `retrieved 879 records`          | 0.15200114250183105    | **laravel get**              |   **4**       |
+| `retrieved 879 records`           | 0.15200114250183105    | **laravel get**              |   **4**       |
 
 ## Work Undertaken
 
@@ -316,4 +316,4 @@ Query DB using indexed migrate_date [TimeStamp]
 
 ## Benchmarked or optimised SQL statements result
 
-* **Rafael** 
+* **Raphael** 
