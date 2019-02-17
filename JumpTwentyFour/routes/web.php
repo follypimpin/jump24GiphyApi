@@ -30,9 +30,7 @@ Route::group(['prefix' => 'giphy_api'], function(){
     Route::post('/search_cursor_latest', 'Api\ApiGiphyController@searchLatestCursor');
     Route::post('/search_chunk_latest', 'Api\ApiGiphyController@searchLatestNonCursor');
     Route::post('/search_paginated', 'Api\ApiGiphyController@searchPaginated');
-    /*Route::get('/search_backend', function () {
-        return view('gify_backend');
-    });*/
+    
 
 });
 
