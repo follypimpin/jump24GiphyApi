@@ -33,7 +33,7 @@ Then ...
 ⦁	git fetch && git checkout Branc_to_go_to Switch to the latest branch
 ⦁	 `composer install` Install composer dependencies (should see vendor folder)
 ⦁	- Edit ".env" file according to the installation requirements
-		GIPHY_API_KEY= "YOUR_API_KEY"  copy from you Giphy account (see 				[Giphy](https://developers.giphy.com/dashboard/)
+		GIPHY_API_KEY= "YOUR_API_KEY"  copy from you Giphy account (see [Giphy](https://developers.giphy.com/dashboard/)
 		GIPHY_BASE_URL = "http://api.giphy.com/v1"
 ⦁	Additionally,  you can manually copy the .env.example file to .env and fill-in their own values 
 ⦁	`php artisan key:generate` Generates unique application
@@ -47,8 +47,10 @@ Enter/edit the DB credentials in ".env"
 
    - `php artisan migrate:fresh` recreates all tables in the database
 ```
-## Testing Routes
-Simply navigate to the url below to get either Gifs or Stickers
+## Testing Routes 
+Simply navigate to the url below to get either Gifs or Stickers. Please refer to
+'/public/docs/source/index.md' for the end points documentation.
+
 ```
 1 - Gif & 2 - Stickers
 http://127.0.0.1/giphy_api/trending/1
@@ -198,7 +200,75 @@ Sample Response
 }
  
 ```
+## API References
+{
+          "name": "Returns Giphy Trending End point(Gifs || Stickers)",
+          "request": {
+            "url": "http:\/\/localhost\/giphy_api\/trending\/{id}",
+            "method": "GET",
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "description": "",
+            "response": []
+          }
+        },
+        {
+          "name": "Returns Giphy Searching End point(Gifs || Stickers)",
+          "request": {
+            "url": "http:\/\/localhost\/giphy_api\/search",
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                    'id' => 'required|integer',
+                    'query' => 'required|string'
+                    ]
+            },
+            "description": "",
+            "response": []
+          }
+        },
+        {
+          "name": "Returns Giphy Random End point(Gifs || Stickers)",
+          "request": {
+            "url": "http:\/\/localhost\/giphy_api\/random",
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+               'id' => 'required|integer',
+              'query' => 'required|string'
+                ]             
+            },
+            "description": "",
+            "response": []
+          }
+        },
+        {
+          "name": "Random API endpoint to fetch a large chunk of gif records(500) & inserts into DB",
+          "request": {
+            "url": "http:\/\/localhost\/giphy_api\/chunk_random",
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                 'id' => 'required|integer',
+                 'query' => 'required|string'
+                 ] 
+              ]
+            },
+            "description": "",
+            "response": []
+          }
+        },        
+             
 
+
+
+
+---
 ## Running the tests
 Simply run the following command
 ```
@@ -300,6 +370,13 @@ Query DB using indexed migrate_date [TimeStamp]
 
 ## Work Undertaken
 
+The GIPHY Sticker API provides animated gifs and stickers (Gif & Stickers object). This identifies with the two classes "Gif" and "Sticker" that are responsible for retrieving 
+the Giphy base url, api key and making requests the Giphy Api end points. This clear seperation of classes will aid performing unit testing, functional testing and verifying all 
+the API endpoints to ensure it actually works as expected. This will ensures other parts relying on these two classes do not fail due to their error.
+
+Guzzle HTTP client was used in sending requests to the Giphy API endpoints . The ApiGiphyClient class, simply takes the base uri, api key 
+and the query params provided by the the Gif and Stickers class. 
+"TESTS give you the CONFIDENCE you need to REFACTOR your code to keep it CLEAN so that you can GO FAST FOREVER."
 
 ## Built With
 
@@ -314,6 +391,6 @@ Query DB using indexed migrate_date [TimeStamp]
 ⦁	Push to the branch (git push origin my-new-feature)
 ⦁	Create new Pull Request
 
-## Benchmarked or optimised SQL statements result
+
 
 * **Raphael** 
