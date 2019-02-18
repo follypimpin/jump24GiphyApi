@@ -7,22 +7,25 @@
 
 import './bootstrap';
 import Vue from 'vue';
-import Vuetify from 'vuetify';
+import VueRouter from 'vue-router';
+import GifApp from '@/js/components/GifApp.vue';
+import routes from '@/js/routes/routes';
+import gifGiphy from '@/js/giphy/gifGiphy';
 
-// Route information for Vue Router
-import Routes from '@/js/routes/routes.js';
 
-// Component File
-import App from '@/js/views/App';
+Vue.use(VueRouter);
 
-Vue.use(Vuetify);
+const router = new VueRouter({
+    routes
+});
 
+window.events = new Vue();
 const app = new Vue({
     el: '#app',
-    router: Routes,
-    render: h => h(App),
+    render: h => h(GifApp),
+    router,
+    store: gifGiphy,
 });
-console.log(App);
 console.log(app);
 export default app;
 

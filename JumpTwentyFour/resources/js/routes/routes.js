@@ -1,17 +1,16 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import SearchGif from '@/js/components/SearchGif.vue';
+import TrendingGifList from '@/js/components/TrendingGifList.vue';
+import List from '@/js/components/List';
 
 import Home from '@/js/components/Home';
 
-Vue.use(VueRouter);
-
-const router = new VueRouter({
-      routes: [
-        {
-            path: '/our-vue',
-            component: Home
-        }
-    ]
-});
-console.log(router);
-export default router;
+/*Vue.use(VueRouter);*/
+const routes = [
+    { path: '/', component: List },
+    { path: '/list', component: List },
+    { path: '/search', component: SearchGif },
+    { path: '/trending-gif-list', component: TrendingGifList },
+    { path: '*', redirect: '/list' },
+];
+console.log(routes);
+export default routes;

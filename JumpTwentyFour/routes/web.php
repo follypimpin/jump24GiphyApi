@@ -13,8 +13,14 @@
 
 /*Route::get('/', function () {
     return view('welcome');
-});*/
+});
 Route::get('/our-vue', 'SinglePageController@home');
+*/
+Route::prefix('api/gifs')->group(function() {
+    Route::get('/{id}', 'Api\ApiGiphyController@getTrending');
+    Route::post('/search', 'Api\ApiGiphyController@searchLatestNonCursor');
+    Route::post('/random', 'Api\ApiGiphyController@postRandom');
+});
 
 Auth::routes();
 
@@ -31,9 +37,7 @@ Route::group(['prefix' => 'giphy_api'], function(){
     Route::post('/search_cursor_latest', 'Api\ApiGiphyController@searchLatestCursor');
     Route::post('/search_chunk_latest', 'Api\ApiGiphyController@searchLatestNonCursor');
     Route::post('/search_paginated', 'Api\ApiGiphyController@searchPaginated');
-    Route::get('/example', function () {
-        return view('example');
-    });
+    
 
 });
 

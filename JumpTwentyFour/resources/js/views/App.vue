@@ -6,7 +6,7 @@
             <v-container fluid>
                 <router-link tag="li" to="/our-vue">Home</router-link>
                 <!--- adding router view -->
-                <router-view></router-view>
+
             </v-container>
         </v-content>
         <v-footer app></v-footer>
